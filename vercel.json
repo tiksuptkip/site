@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/admin(/.*)?$",
+      "status": 404,
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/admin_sam_jor_18_&&_10(/.*)?$",
+      "dest": "/index.html"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

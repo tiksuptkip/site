@@ -1,0 +1,441 @@
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "General settings for the crypto exchange platform",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string", "maxLength": 100 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "logoIcon": { "type": "string", "maxLength": 50 },
+        "themeColor": { "type": "string", "maxLength": 50 },
+        "announcement": { "type": "string", "maxLength": 500 },
+        "binarySettings": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "globalProfitPercent": { "type": "number" },
+            "minDuration": { "type": "string", "maxLength": 10 },
+            "maxDuration": { "type": "string", "maxLength": 10 }
+          }
+        },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["siteName", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered user profile and wallet information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "firstName": { "type": "string", "maxLength": 100 },
+        "lastName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 200 },
+        "walletBalance": { "type": "number" },
+        "isBlocked": { "type": "boolean" },
+        "registrationIp": { "type": "string", "maxLength": 100 },
+        "lastLoginIp": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "verified": { "type": "boolean" },
+        "referralCode": { "type": "string", "maxLength": 30 },
+        "referredBy": { "type": "string", "maxLength": 128 },
+        "referralCount": { "type": "number" },
+        "referralEarnings": { "type": "number" }
+      },
+      "required": ["uid", "firstName", "lastName", "email", "walletBalance", "isBlocked", "createdAt"]
+    },
+    "CryptoCoin": {
+      "title": "CryptoCoin",
+      "description": "Cryptocurrency coin listed on the platform",
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string", "maxLength": 20 },
+        "name": { "type": "string", "maxLength": 100 },
+        "tvSymbol": { "type": "string", "maxLength": 100 },
+        "basePrice": { "type": "number" },
+        "change24h": { "type": "number" },
+        "high24h": { "type": "number" },
+        "low24h": { "type": "number" },
+        "volume24h": { "type": "number" },
+        "enabled": { "type": "boolean" },
+        "isDefault": { "type": "boolean" },
+        "order": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["symbol", "name", "tvSymbol", "basePrice", "enabled"]
+    },
+    "WalletLog": {
+      "title": "WalletLog",
+      "description": "Audit log for administrative balance additions",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string" },
+        "adminName": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "userName": { "type": "string", "maxLength": 200 },
+        "amount": { "type": "number" },
+        "previousBalance": { "type": "number" },
+        "newBalance": { "type": "number" },
+        "reason": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "enum": ["ADMIN_ADD"] }
+      },
+      "required": ["timestamp", "adminName", "userId", "userEmail", "amount", "newBalance", "type"]
+    },
+    "OtpVerification": {
+      "title": "OtpVerification",
+      "description": "Temporary 6-digit OTP verification codes",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 200 },
+        "otp": { "type": "string", "maxLength": 6 },
+        "purpose": { "type": "string", "enum": ["REGISTER", "PASSWORD_RESET"] },
+        "createdAt": { "type": "string" },
+        "expiresAt": { "type": "string" },
+        "verified": { "type": "boolean" },
+        "ip": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["email", "otp", "purpose", "createdAt", "expiresAt"]
+    },
+    "BinaryTrade": {
+      "title": "BinaryTrade",
+      "description": "Binary UP/DOWN trading order with real-time countdown settlement",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 200 },
+        "coin": { "type": "string", "maxLength": 20 },
+        "direction": { "type": "string", "enum": ["UP", "DOWN"] },
+        "entryPrice": { "type": "number" },
+        "exitPrice": { "type": "number" },
+        "amount": { "type": "number" },
+        "profitPercent": { "type": "number" },
+        "duration": { "type": "string", "maxLength": 10 },
+        "durationSeconds": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "WIN", "LOSS"] },
+        "startTime": { "type": "number" },
+        "endTime": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "settledAt": { "type": "string" },
+        "payout": { "type": "number" }
+      },
+      "required": ["userId", "email", "coin", "direction", "entryPrice", "amount", "profitPercent", "status", "startTime", "endTime"]
+    },
+    "Deposit": {
+      "title": "Deposit",
+      "description": "Deposit request with transaction proof submitted by trader",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "coin": { "type": "string", "maxLength": 20 },
+        "network": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "txId": { "type": "string", "maxLength": 256 },
+        "screenshotUrl": { "type": "string", "maxLength": 500000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string" },
+        "reviewedAt": { "type": "string" },
+        "reviewedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["userId", "userEmail", "coin", "network", "amount", "txId", "status", "createdAt"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Withdrawal request submitted by trader",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "coin": { "type": "string", "maxLength": 20 },
+        "network": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "walletAddress": { "type": "string", "maxLength": 256 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string" },
+        "reviewedAt": { "type": "string" },
+        "reviewedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["userId", "userEmail", "coin", "amount", "walletAddress", "status", "createdAt"]
+    },
+    "TelegramChannel": {
+      "title": "TelegramChannel",
+      "description": "VIP Telegram signals channel configurations and proof images",
+      "type": "object",
+      "properties": {
+        "channelId": { "type": "string", "maxLength": 50 },
+        "title": { "type": "string", "maxLength": 100 },
+        "price": { "type": "number" },
+        "inviteLink": { "type": "string", "maxLength": 500 },
+        "durationDays": { "type": "number" },
+        "winRate": { "type": "string", "maxLength": 50 },
+        "totalTrades": { "type": "number" },
+        "description": { "type": "string", "maxLength": 1000 },
+        "proofImages": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["channelId", "title", "price", "durationDays"]
+    },
+    "TelegramSubscription": {
+      "title": "TelegramSubscription",
+      "description": "Trader active subscription to a Telegram VIP channel",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "channelId": { "type": "string", "maxLength": 50 },
+        "channelTitle": { "type": "string", "maxLength": 100 },
+        "pricePaid": { "type": "number" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "expired", "cancelled"] },
+        "inviteLink": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "userEmail", "channelId", "startDate", "endDate", "status"]
+    },
+    "TelegramGroup": {
+      "title": "TelegramGroup",
+      "description": "Telegram channels/groups configured for automatic trade signal posting",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string", "maxLength": 50 },
+        "groupName": { "type": "string", "maxLength": 100 },
+        "tradeType": { "type": "string", "enum": ["Crypto", "Binary", "VIP", "Regular"] },
+        "dailyCount": { "type": "number" },
+        "postTimes": { "type": "array" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["groupId", "groupName", "tradeType", "dailyCount", "postTimes", "active"]
+    },
+    "TradeBankItem": {
+      "title": "TradeBankItem",
+      "description": "Bank of trade signal templates with entry, targets and analysis chart",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "type": { "type": "string", "enum": ["LONG", "SHORT"] },
+        "entry": { "type": "number" },
+        "target": { "type": "number" },
+        "profit": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 500000 },
+        "category": { "type": "string", "enum": ["Crypto", "Binary", "VIP", "Regular"] },
+        "createdAt": { "type": "string" },
+        "lastPostedAt": { "type": "string" }
+      },
+      "required": ["title", "type", "entry", "target", "profit", "category", "createdAt"]
+    },
+    "PostLog": {
+      "title": "PostLog",
+      "description": "Execution log of Telegram automated trade posts",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string", "maxLength": 50 },
+        "groupName": { "type": "string", "maxLength": 100 },
+        "tradeId": { "type": "string", "maxLength": 128 },
+        "tradeTitle": { "type": "string", "maxLength": 200 },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" },
+        "scheduledTime": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["groupId", "timestamp", "status"]
+    },
+    "BotSettings": {
+      "title": "BotSettings",
+      "description": "Configuration for Telegram bot token and master automation switch",
+      "type": "object",
+      "properties": {
+        "token": { "type": "string", "maxLength": 200 },
+        "autoEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["autoEnabled"]
+    },
+    "Referral": {
+      "title": "Referral",
+      "description": "Multi-tier referral record linking referrer to referred user and tracking commission",
+      "type": "object",
+      "properties": {
+        "referrerId": { "type": "string", "maxLength": 128 },
+        "referredId": { "type": "string", "maxLength": 128 },
+        "level": { "type": "number" },
+        "depositAmount": { "type": "number" },
+        "commissionEarned": { "type": "number" },
+        "status": { "type": "string", "enum": ["completed", "pending"] },
+        "createdAt": { "type": "string" },
+        "referredName": { "type": "string", "maxLength": 200 },
+        "referredEmail": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["referrerId", "referredId", "level", "depositAmount", "commissionEarned", "status", "createdAt"]
+    },
+    "ReferralSettings": {
+      "title": "ReferralSettings",
+      "description": "Dynamic commission tiers and global percentages for referral system",
+      "type": "object",
+      "properties": {
+        "tiers": { "type": "array" },
+        "globalPercent": { "type": "number" },
+        "level2Percent": { "type": "number" },
+        "level3Percent": { "type": "number" },
+        "autoAddToWallet": { "type": "boolean" },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["tiers", "globalPercent", "autoAddToWallet", "updatedAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial and commission ledger transaction records",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "fromUser": { "type": "string", "maxLength": 128 },
+        "fromUserName": { "type": "string", "maxLength": 200 },
+        "tier": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "details": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["type", "userId", "amount", "createdAt"]
+    },
+    "TelegramInvite": {
+      "title": "TelegramInvite",
+      "description": "Single-use private Telegram invite links generated per subscriber",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 200 },
+        "channelId": { "type": "string", "maxLength": 100 },
+        "inviteLink": { "type": "string", "maxLength": 500 },
+        "memberLimit": { "type": "number" },
+        "used": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "userEmail", "channelId", "inviteLink", "memberLimit", "used", "createdAt"]
+    },
+    "CoinBalance": {
+      "title": "CoinBalance",
+      "description": "User holding for a specific cryptocurrency in multi-currency wallet",
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string", "maxLength": 20 },
+        "name": { "type": "string", "maxLength": 100 },
+        "balance": { "type": "number" },
+        "locked": { "type": "number" },
+        "totalDeposit": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["symbol", "balance", "locked"]
+    },
+    "SupportedCoin": {
+      "title": "SupportedCoin",
+      "description": "Supported crypto coin with live price from ticker/CoinGecko",
+      "type": "object",
+      "properties": {
+        "symbol": { "type": "string", "maxLength": 20 },
+        "name": { "type": "string", "maxLength": 100 },
+        "icon": { "type": "string", "maxLength": 1000 },
+        "coingeckoId": { "type": "string", "maxLength": 100 },
+        "currentPrice": { "type": "number" },
+        "change24h": { "type": "number" },
+        "high24h": { "type": "number" },
+        "low24h": { "type": "number" },
+        "enabled": { "type": "boolean" },
+        "network": { "type": "string", "maxLength": 50 },
+        "order": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["symbol", "name", "coingeckoId", "currentPrice", "enabled"]
+    }
+  },
+  "firestore": {
+    "/userWallets/{userId}/balances/{symbol}": {
+      "schema": { "$ref": "#/entities/CoinBalance" },
+      "description": "Multi-currency wallet holdings subcollection per user and per coin"
+    },
+    "/supportedCoins/{coinId}": {
+      "schema": { "$ref": "#/entities/SupportedCoin" },
+      "description": "Supported cryptocurrencies with live market prices"
+    },
+    "/referrals/{referralId}": {
+      "schema": { "$ref": "#/entities/Referral" },
+      "description": "Multi-tier referral commissions and member links"
+    },
+    "/referralSettings/{docId}": {
+      "schema": { "$ref": "#/entities/ReferralSettings" },
+      "description": "Admin configuration for referral tiers and level commissions"
+    },
+    "/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Financial transactions ledger including referral earnings and trade payouts"
+    },
+    "/telegramInvites/{inviteId}": {
+      "schema": { "$ref": "#/entities/TelegramInvite" },
+      "description": "Single-use Telegram channel invite links"
+    },
+    "/telegram_groups/{docId}": {
+      "schema": { "$ref": "#/entities/TelegramGroup" },
+      "description": "Registered Telegram groups and target channels for auto posting"
+    },
+    "/trade_bank/{tradeId}": {
+      "schema": { "$ref": "#/entities/TradeBankItem" },
+      "description": "Repository of trade signal cards available for scheduled broadcasting"
+    },
+    "/post_logs/{logId}": {
+      "schema": { "$ref": "#/entities/PostLog" },
+      "description": "History and execution outcomes of auto posted trade signals"
+    },
+    "/bot_settings/{docId}": {
+      "schema": { "$ref": "#/entities/BotSettings" },
+      "description": "Telegram bot API credentials and auto poster activation status"
+    },
+    "/deposits/{depositId}": {
+      "schema": { "$ref": "#/entities/Deposit" },
+      "description": "Deposit requests with TxID and payment screenshot"
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": { "$ref": "#/entities/Withdrawal" },
+      "description": "Withdrawal requests to external wallets"
+    },
+    "/telegramChannels/{channelId}": {
+      "schema": { "$ref": "#/entities/TelegramChannel" },
+      "description": "VIP Telegram signals channel settings and proof galleries"
+    },
+    "/telegramSubscriptions/{subId}": {
+      "schema": { "$ref": "#/entities/TelegramSubscription" },
+      "description": "Active user memberships to Telegram signal channels"
+    },
+    "/site_settings/general": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Global exchange site name, branding, and color themes"
+    },
+    "/binaryTrades/{tradeId}": {
+      "schema": { "$ref": "#/entities/BinaryTrade" },
+      "description": "Binary options trades placed by users with live countdown and payout settlement"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile with real-time USDT wallet balance and status"
+    },
+    "/crypto_coins/{coinId}": {
+      "schema": { "$ref": "#/entities/CryptoCoin" },
+      "description": "List of active and configured cryptocurrencies for trading"
+    },
+    "/wallet_logs/{logId}": {
+      "schema": { "$ref": "#/entities/WalletLog" },
+      "description": "Immutable ledger of all USDT balance additions performed by admins"
+    },
+    "/otp_verifications/{verificationId}": {
+      "schema": { "$ref": "#/entities/OtpVerification" },
+      "description": "Records for 6-digit email OTP verifications"
+    }
+  }
+}

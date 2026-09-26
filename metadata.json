@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Remix Remix Remix tiksup - Crypto Exchange",
+  "description": "tiksup - Bilingual (Arabic \u0026 English) cryptocurrency and binary trading platform with real-time charts, binary UP/DOWN options, and administrative control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
