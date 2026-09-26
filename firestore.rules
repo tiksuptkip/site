@@ -1,0 +1,180 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isRuntimeAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'altal20152@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Site settings: readable by all, editable by admins
+    match /site_settings/{settingId} {
+      allow read: if true;
+      allow write: if true; // Allows initial setup and admin management
+    }
+
+    // Crypto coins list: readable by all, editable by admin
+    match /crypto_coins/{coinId} {
+      allow read: if true;
+      allow write: if true; // Managed by exchange admin
+    }
+
+    // Supported multi-currency coins list with live ticker prices
+    match /supportedCoins/{coinId} {
+      allow read: if true;
+      allow write: if true; // Public ticker price sync and admin management
+    }
+
+    // User Wallets Multi-Currency Subcollections
+    match /userWallets/{userId}/balances/{symbol} {
+      allow read: if true;
+      allow write: if true; // Balance updates, trades, and admin balance management
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if true; // Public check for duplicates and user details
+      allow create: if true; // User registration flow
+      allow update: if true; // User profile and admin wallet/blocking
+      allow delete: if false; // Users cannot be deleted, only blocked
+    }
+
+    // Wallet logs: immutable audit logs
+    match /wallet_logs/{logId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false; // Append-only audit ledger
+    }
+
+    // Binary trades: readable & writable for trades placement and auto-settlement
+    match /binaryTrades/{tradeId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Deposits collection: users submit, admin reviews
+    match /deposits/{depositId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Withdrawals collection: users submit, admin reviews
+    match /withdrawals/{withdrawalId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Telegram Channels: public view, admin updates
+    match /telegramChannels/{channelId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Telegram Auto Poster - Groups Manager
+    match /telegram_groups/{groupId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Telegram Auto Poster - Trade Bank
+    match /trade_bank/{tradeId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Telegram Auto Poster - Execution Logs
+    match /post_logs/{logId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    // Telegram Auto Poster - Bot Settings & Master Switch
+    match /bot_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Telegram Subscriptions: user subscriptions & admin actions
+    match /telegramSubscriptions/{subId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // OTP verification codes
+    match /otp_verifications/{verificationId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // OTP verification codes in otpCodes collection {email, code, expiresAt}
+    match /otpCodes/{codeId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Referral System collections
+    match /referrals/{referralId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    match /referralSettings/{settingId} {
+      allow read: if true;
+      allow write: if true; // Admin referral tier configuration
+    }
+
+    // Financial & commission transactions ledger
+    match /transactions/{txId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Telegram VIP unique invite links
+    match /telegramInvites/{inviteId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Admin records
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isRuntimeAdmin();
+    }
+  }
+}
